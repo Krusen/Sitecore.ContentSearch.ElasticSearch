@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ElasticSearch.ContentSearch.Extensions;
 using Nest;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Linq.Extensions;
-using Sitecore.ContentSearch.Linq.Helpers;
 using Sitecore.ContentSearch.Linq.Methods;
 using Sitecore.ContentSearch.Linq.Nodes;
 using Sitecore.ContentSearch.Linq.Parsing;
@@ -15,6 +13,22 @@ namespace ElasticSearch.ContentSearch.Linq
 {
     public class ElasticQueryMapper : QueryMapper<ElasticQuery>
     {
+        public ElasticIndexParameters Parameters { get; set; }
+
+        protected readonly IFieldQueryTranslatorMap<IFieldQueryTranslator> FieldQueryTranslators;
+
+        protected FieldNameTranslator FieldNameTranslator { get; set; }
+
+        public ElasticQueryMapper(ElasticIndexParameters parameters)
+        {
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+
+            Parameters = parameters;
+            ValueFormatter = parameters.ValueFormatter;
+            FieldQueryTranslators = parameters.FieldQueryTranslators;
+            FieldNameTranslator = parameters.FieldNameTranslator;
+        }
+
         public override ElasticQuery MapQuery(IndexQuery query)
         {
             //throw new NotImplementedException();
@@ -212,6 +226,7 @@ namespace ElasticSearch.ContentSearch.Linq
             }
         }
 
+        // TODO: Actually go through these methods
         #region Strip methods
 
         protected virtual void StripAll(AllNode node, HashSet<QueryMethod> additionalQueryMethods)

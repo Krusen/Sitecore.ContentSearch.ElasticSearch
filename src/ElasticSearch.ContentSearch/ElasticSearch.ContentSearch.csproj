@@ -76,6 +76,7 @@
     <Compile Include="Extensions\QueryNodeExtensions.cs" />
     <Compile Include="LinqToElasticIndex.cs" />
     <Compile Include="Linq\ElasticIndex.cs" />
+    <Compile Include="Linq\ElasticIndexParameters.cs" />
     <Compile Include="Linq\ElasticQuery.cs" />
     <Compile Include="Linq\ElasticQueryMapper.cs" />
     <Compile Include="Linq\ElasticQueryOptimizer.cs" />
