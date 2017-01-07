@@ -391,11 +391,24 @@ namespace ElasticSearch.ContentSearch.Linq
             };
         }
 
+        // TODO: ProcessAsVirtualField? Both Solr and Lucene do this
+        // TODO: null value check (change to !ExistsQuery then?)
         protected QueryBase VisitEqual(EqualNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            // TODO: Move these 3 lines to separate method for reuse?
+            var fieldName = GetFormattedFieldName(node);
+            var valueNode = node.GetValueNode<string>();
+            var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
+
+            return new TermQuery
+            {
+                Field = fieldName,
+                Value = value.ToStringOrEmpty(),
+                Boost = node.Boost
+            };
         }
 
+        // TODO: Handle actual bool field value? Or am I missing something? Solr and Lucene both just pass 'true'
         protected QueryBase VisitField(FieldNode node, ElasticQueryMapperState state)
         {
             if (node.FieldType != typeof(bool))
