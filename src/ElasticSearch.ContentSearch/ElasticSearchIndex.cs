@@ -19,6 +19,8 @@ namespace ElasticSearch.ContentSearch
         public override ProviderIndexConfiguration Configuration { get; set; }
         public override IIndexOperations Operations { get; }
         public override bool IsSharded { get; }
+        public override bool EnableItemLanguageFallback { get; set; }
+        public override bool EnableFieldLanguageFallback { get; set; }
         public override IShardingStrategy ShardingStrategy { get; set; }
         public override IShardFactory ShardFactory { get; }
         public override IEnumerable<Shard> Shards { get; }
