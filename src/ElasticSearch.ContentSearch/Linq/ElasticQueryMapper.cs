@@ -360,6 +360,48 @@ namespace ElasticSearch.ContentSearch.Linq
 
         protected QueryBase VisitBetween(BetweenNode node, ElasticQueryMapperState state)
         {
+            // TODO: Same as GreaterThan etc. - i.e. check type for date, number or string etc.
+            var fieldName = FormatFieldName(node.Field);
+            var includeLower = node.Inclusion == Inclusion.Both || node.Inclusion == Inclusion.Lower;
+            var includeUpper = node.Inclusion == Inclusion.Both || node.Inclusion == Inclusion.Upper;
+
+            // TODO: Allow null as one of parameters?
+
+            // TODO: If number
+            if (true)
+            {
+                var lowerNumber = double.Parse(node.From.ToString()); // TODO:
+                var upperNumber = double.Parse(node.To.ToString()); // TODO:
+
+                var query = new NumericRangeQuery
+                {
+                    Field = fieldName,
+                    Boost = node.Boost
+                };
+
+                // TODO: Refactor this shit to something less shitty looking
+                if (includeLower)
+                {
+                    query.GreaterThanOrEqualTo = lowerNumber;
+                }
+                else
+                {
+                    query.GreaterThan = lowerNumber;
+                }
+
+                if (includeUpper)
+                {
+                    query.LessThanOrEqualTo = upperNumber;
+                }
+                else
+                {
+                    query.LessThan = upperNumber;
+                }
+            }
+
+            // TODO: If date
+            // TODO: If term (string)
+
             throw new NotImplementedException();
         }
 
