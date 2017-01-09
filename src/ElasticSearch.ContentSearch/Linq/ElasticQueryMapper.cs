@@ -523,7 +523,13 @@ namespace ElasticSearch.ContentSearch.Linq
 
         protected QueryBase VisitOr(OrNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            // TODO: NullOrEmpty check and maybe more
+            var query1 = Visit(node.LeftNode, state);
+            var query2 = Visit(node.RightNode, state);
+
+            // TODO: This is the same as Union - not sure if that is correct
+            // TODO: Need to check if this is correct, but it should be: https://www.elastic.co/guide/en/elasticsearch/guide/current/bool-query.html
+            return query1 || query2;
         }
 
         // TODO: ProcessAsVirtualField? Solr does this, but not Lucene
