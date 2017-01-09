@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="App_Config\Include\ElasticSearch\ElasticSearch.ContentSearch.config" />
     <None Include="App_Config\Include\ElasticSearch\ElasticSearch.ContentSearch.DefaultIndexConfiguration.config" />
     <None Include="packages.config">
