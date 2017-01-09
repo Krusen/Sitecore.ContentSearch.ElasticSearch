@@ -413,6 +413,8 @@ namespace ElasticSearch.ContentSearch.Linq
             var valueNode = node.GetValueNode<string>();
             var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
 
+            // TODO: Use WildcardQuery if it's a keyword field, other wise if full-text field use MatchQuery?
+
             return new WildcardQuery
             {
                 Field = fieldName,
@@ -437,7 +439,7 @@ namespace ElasticSearch.ContentSearch.Linq
         }
 
         // TODO: ProcessAsVirtualField? Both Solr and Lucene do this
-        // TODO: null value check (change to !ExistsQuery then?)
+        // TODO: null value check (change to !ExistsQuery/MissingQuery then?)
         protected QueryBase VisitEqual(EqualNode node, ElasticQueryMapperState state)
         {
             // TODO: Move these 3 lines to separate method for reuse?
@@ -445,10 +447,20 @@ namespace ElasticSearch.ContentSearch.Linq
             var valueNode = node.GetValueNode<string>();
             var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
 
+            // TODO: Maybe use Term if keyword field, otherwise MatchPhrase?
+            // TODO: Match/MatchPhrase?
+            /* Like the match query, the match_phrase query first analyzes the query string to produce a list of terms.
+             * It then searches for all the terms, but keeps only documents that contain all of the search terms,
+             * in the same positions relative to each other.
+             */
+
+            // TODO: Term query
+            /* the term query looks in the inverted index for the exact term only; it won’t match any variants */
+
             return new TermQuery
             {
                 Field = fieldName,
-                Value = value.ToStringOrEmpty(),
+                Value = value,
                 Boost = node.Boost
             };
         }
@@ -543,7 +555,7 @@ namespace ElasticSearch.ContentSearch.Linq
             return new PrefixQuery
             {
                 Field = fieldName,
-                Value = value.ToStringOrEmpty(), // TODO: Is it necesarry? Why are some Value 'object' and some 'string'?
+                Value = value.ToStringOrEmpty(), // TODO: StartsWith can only be done on strings (?) so it should actually already always be a string
                 Boost = node.Boost
             };
         }
@@ -570,6 +582,7 @@ namespace ElasticSearch.ContentSearch.Linq
             var valueNode = node.GetValueNode<string>();
             var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
 
+            // TODO: RegexOptions - does Elastic support this?
             return new RegexpQuery
             {
                 Field = fieldName,
@@ -596,7 +609,7 @@ namespace ElasticSearch.ContentSearch.Linq
             return new WildcardQuery
             {
                 Field = fieldName,
-                Value = value.ToStringOrEmpty(),
+                Value = value.ToStringOrEmpty(), // TODO: StartsWith can only be done on strings (?) so it should actually already always be a string
                 Boost = node.Boost
             };
         }
@@ -608,13 +621,18 @@ namespace ElasticSearch.ContentSearch.Linq
             var valueNode = node.GetValueNode<string>();
             var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
 
-            var query = new FuzzyQuery
+            // TODO: Match/MatchPhrase?
+            /* Like the match query, the match_phrase query first analyzes the query string to produce a list of terms.
+             * It then searches for all the terms, but keeps only documents that contain all of the search terms,
+             * in the same positions relative to each other.
+             */
+            var query = new MatchQuery
             {
                 Field = fieldName,
-                Value = value.ToStringOrEmpty(),
+                Query = value.ToStringOrEmpty(),
                 Boost = node.Boost,
 
-                // TODO: Not sure if this is the best way to handle this.
+                // TODO: Not sure if this is the best way to handle slop/similarity.
                 // Use EditDistance if Slop > 0, otherwise use Ratio if MinimumSimilarity > 0 and not default, otherwise Auto
                 Fuzziness = node.Slop > 0
                     ? Fuzziness.EditDistance(node.Slop)
