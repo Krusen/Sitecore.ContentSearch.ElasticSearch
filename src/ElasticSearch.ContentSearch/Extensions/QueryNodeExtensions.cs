@@ -30,5 +30,16 @@ namespace ElasticSearch.ContentSearch.Extensions
         {
             return QueryHelper.GetValueNode<T>(node);
         }
+
+        public static ConstantNode GetConstantNode(this BinaryNode node)
+        {
+            var constantNode = node.LeftNode as ConstantNode ?? node.RightNode as ConstantNode;
+            if (constantNode == null)
+            {
+                throw new NotSupportedException(
+                    $"No constant node in query node of type: '{node.GetType().FullName}'. Left: '{node.LeftNode.GetType().FullName}'.  Right: '{node.RightNode.GetType().FullName}'.");
+            }
+            return constantNode;
+        }
     }
 }
