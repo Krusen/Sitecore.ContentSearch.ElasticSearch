@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using ElasticSearch.ContentSearch.Extensions;
 using Nest;
+using Sitecore.ContentSearch.Linq;
 using Sitecore.ContentSearch.Linq.Common;
 using Sitecore.ContentSearch.Linq.Extensions;
 using Sitecore.ContentSearch.Linq.Methods;
@@ -418,24 +421,25 @@ namespace ElasticSearch.ContentSearch.Linq
             return new TermQuery {Field = fieldName, Value = true};
         }
 
+        // TODO: ProcessAsVirtualField? Both Solr and Lucene do this
         protected QueryBase VisitGreaterThan(GreaterThanNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            return GetSingleTermRangeQuery(node, RangeQueryPropertyNames.GreaterThan);
         }
 
         protected QueryBase VisitGreaterThanOrEqual(GreaterThanOrEqualNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            return GetSingleTermRangeQuery(node, RangeQueryPropertyNames.GreaterThanOrEqualTo);
         }
 
         protected QueryBase VisitLessThan(LessThanNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            return GetSingleTermRangeQuery(node, RangeQueryPropertyNames.LessThan);
         }
 
         protected QueryBase VisitLessThanOrEqual(LessThanOrEqualNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            return GetSingleTermRangeQuery(node, RangeQueryPropertyNames.LessThanOrEqualTo);
         }
 
         protected QueryBase VisitMatchAll(MatchAllNode node, ElasticQueryMapperState state)
@@ -586,6 +590,76 @@ namespace ElasticSearch.ContentSearch.Linq
 
         #endregion
 
+        // TODO: Refactor so we can use for BetweenQuery as well?
+        private QueryBase GetSingleTermRangeQuery(BinaryNode node, string propertyName)
+        {
+            var fieldName = GetFormattedFieldName(node);
+            // TODO: Don't think we need to format this?
+            //var valueNode = node.GetValueNode<string>();
+            //var value = ValueFormatter.FormatValueForIndexStorage(valueNode.Value, fieldName);
+
+            var valueType = node.GetConstantNode().Type; // TODO: This is a bit dodgy, might need testing.
+            var value = node.GetValueNode<object>().Value;
+
+            // TODO: Use this for type checking instead? Maybe store the types in a list and do DateTimeTypes.Contains(nodeType)
+            //var valueNode = node.GetConstantNode(); // Add method parameter 'nodeType'
+            //var isDate = valueNode.Type == typeof (DateTime) || valueNode.Type == typeof (DateTime?) ||
+            //             valueNode.Type == typeof (DateTimeOffset) || valueNode.Type == typeof (DateTimeOffset?);
+
+            // Number
+            double number;
+            if (double.TryParse(value.ToString(), out number))
+            {
+                var query = new NumericRangeQuery
+                {
+                    Field = fieldName,
+                    Boost = node.Boost
+                };
+
+                return SetProperty(query, number, propertyName);
+            }
+
+            // Date
+            var date = value as DateTime? ?? (value as DateTimeOffset?)?.UtcDateTime;
+            if (date != null)
+            {
+                var query = new DateRangeQuery
+                {
+                    Field = fieldName,
+                    Boost = node.Boost
+                };
+
+                // TODO: We might need to use RoundTo(). Could we maybe specify this on field configuration?
+                return SetProperty(query, DateMath.Anchored(date.Value), propertyName);
+            }
+
+            // String
+            var term = value as string;
+            if (term != null)
+            {
+                var query = new TermRangeQuery
+                {
+                    Field = fieldName,
+                    Boost = node.Boost
+                };
+
+                return SetProperty(query, term, propertyName);
+            }
+
+            // TODO: Handle or throw special exception for null string (when type is string but it is null)
+
+            throw new NotSupportedException($"The query node type '{valueType}' is not supported in 'greater than' comparisons. Supported types: numeric, DateTime, DateTimeOffset and string");
+        }
+
+        // TODO: Rename
+        private static QueryBase SetProperty(QueryBase query, object value, string propertyName)
+        {
+            var property = query.GetType().GetProperty(propertyName);
+            property.SetValue(query, value);
+
+            return query;
+        }
+
         protected string GetFormattedFieldName(BinaryNode node)
         {
             return FormatFieldName(node.GetFieldNode().FieldKey);
@@ -593,6 +667,14 @@ namespace ElasticSearch.ContentSearch.Linq
         protected string FormatFieldName(string fieldName)
         {
             return fieldName.ToLowerInvariant().Replace(" ", "_");
+        }
+
+        protected static class RangeQueryPropertyNames
+        {
+            public const string GreaterThan = "GreaterThan";
+            public const string GreaterThanOrEqualTo = "GreaterThanOrEqualTo";
+            public const string LessThan = "LessThan";
+            public const string LessThanOrEqualTo = "LessThanOrEqualTo";
         }
 
         protected class ElasticQueryMapperState
