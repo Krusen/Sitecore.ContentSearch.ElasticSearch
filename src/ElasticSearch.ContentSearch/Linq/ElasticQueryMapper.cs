@@ -50,167 +50,167 @@ namespace ElasticSearch.ContentSearch.Linq
             switch (node.NodeType)
             {
                 case QueryNodeType.All:
-                    StripAll((AllNode) node, state.AdditionalQueryMethods);
-                    return Visit(((AllNode) node).SourceNode, state);
+                    StripAll((AllNode)node, state.AdditionalQueryMethods);
+                    return Visit(((AllNode)node).SourceNode, state);
 
                 case QueryNodeType.And:
-                    return VisitAnd((AndNode) node, state);
+                    return VisitAnd((AndNode)node, state);
 
                 case QueryNodeType.Any:
-                    StripAny((AnyNode) node, state.AdditionalQueryMethods);
-                    return Visit(((AnyNode) node).SourceNode, state);
+                    StripAny((AnyNode)node, state.AdditionalQueryMethods);
+                    return Visit(((AnyNode)node).SourceNode, state);
 
                 case QueryNodeType.Between:
-                    return VisitBetween((BetweenNode) node, state);
+                    return VisitBetween((BetweenNode)node, state);
 
                 case QueryNodeType.Cast:
-                    StripCast((CastNode) node, state.AdditionalQueryMethods);
-                    return Visit(((CastNode) node).SourceNode, state);
+                    StripCast((CastNode)node, state.AdditionalQueryMethods);
+                    return Visit(((CastNode)node).SourceNode, state);
 
                 case QueryNodeType.Contains:
-                    return VisitContains((ContainsNode) node, state);
+                    return VisitContains((ContainsNode)node, state);
 
                 case QueryNodeType.Count:
-                    StripCount((CountNode) node, state.AdditionalQueryMethods);
-                    return Visit(((CountNode) node).SourceNode, state);
+                    StripCount((CountNode)node, state.AdditionalQueryMethods);
+                    return Visit(((CountNode)node).SourceNode, state);
 
                 case QueryNodeType.ElementAt:
-                    StripElementAt((ElementAtNode) node, state.AdditionalQueryMethods);
-                    return Visit(((ElementAtNode) node).SourceNode, state);
+                    StripElementAt((ElementAtNode)node, state.AdditionalQueryMethods);
+                    return Visit(((ElementAtNode)node).SourceNode, state);
 
                 case QueryNodeType.EndsWith:
-                    return VisitEndsWith((EndsWithNode) node, state);
+                    return VisitEndsWith((EndsWithNode)node, state);
 
                 case QueryNodeType.Equal:
-                    return VisitEqual((EqualNode) node, state);
+                    return VisitEqual((EqualNode)node, state);
 
                 case QueryNodeType.Field:
-                    return VisitField((FieldNode) node, state);
+                    return VisitField((FieldNode)node, state);
 
                 case QueryNodeType.First:
-                    StripFirst((FirstNode) node, state.AdditionalQueryMethods);
-                    return Visit(((FirstNode) node).SourceNode, state);
+                    StripFirst((FirstNode)node, state.AdditionalQueryMethods);
+                    return Visit(((FirstNode)node).SourceNode, state);
 
                 case QueryNodeType.GreaterThan:
-                    return VisitGreaterThan((GreaterThanNode) node, state);
+                    return VisitGreaterThan((GreaterThanNode)node, state);
 
                 case QueryNodeType.GreaterThanOrEqual:
-                    return VisitGreaterThanOrEqual((GreaterThanOrEqualNode) node, state);
+                    return VisitGreaterThanOrEqual((GreaterThanOrEqualNode)node, state);
 
                 case QueryNodeType.Last:
-                    StripLast((LastNode) node, state.AdditionalQueryMethods);
-                    return Visit(((LastNode) node).SourceNode, state);
+                    StripLast((LastNode)node, state.AdditionalQueryMethods);
+                    return Visit(((LastNode)node).SourceNode, state);
 
                 case QueryNodeType.LessThan:
-                    return VisitLessThan((LessThanNode) node, state);
+                    return VisitLessThan((LessThanNode)node, state);
 
                 case QueryNodeType.LessThanOrEqual:
-                    return VisitLessThanOrEqual((LessThanOrEqualNode) node, state);
+                    return VisitLessThanOrEqual((LessThanOrEqualNode)node, state);
 
                 case QueryNodeType.MatchAll:
-                    return VisitMatchAll((MatchAllNode) node, state);
+                    return VisitMatchAll((MatchAllNode)node, state);
 
                 case QueryNodeType.MatchNone:
-                    return VisitMatchNone((MatchNoneNode) node, state);
+                    return VisitMatchNone((MatchNoneNode)node, state);
 
                 case QueryNodeType.Max:
-                    StripMax((MaxNode) node, state.AdditionalQueryMethods);
-                    return Visit(((MaxNode) node).SourceNode, state);
+                    StripMax((MaxNode)node, state.AdditionalQueryMethods);
+                    return Visit(((MaxNode)node).SourceNode, state);
 
                 case QueryNodeType.Min:
-                    StripMin((MinNode) node, state.AdditionalQueryMethods);
-                    return Visit(((MinNode) node).SourceNode, state);
+                    StripMin((MinNode)node, state.AdditionalQueryMethods);
+                    return Visit(((MinNode)node).SourceNode, state);
 
                 case QueryNodeType.Not:
-                    return VisitNot((NotNode) node, state);
+                    return VisitNot((NotNode)node, state);
 
                 case QueryNodeType.Or:
-                    return VisitOr((OrNode) node, state);
+                    return VisitOr((OrNode)node, state);
 
                 case QueryNodeType.OrderBy:
-                    StripOrderBy((OrderByNode) node, state.AdditionalQueryMethods);
-                    return Visit(((OrderByNode) node).SourceNode, state);
+                    StripOrderBy((OrderByNode)node, state.AdditionalQueryMethods);
+                    return Visit(((OrderByNode)node).SourceNode, state);
 
                 case QueryNodeType.Select:
-                    StripSelect((SelectNode) node, state.AdditionalQueryMethods);
-                    return Visit(((SelectNode) node).SourceNode, state);
+                    StripSelect((SelectNode)node, state.AdditionalQueryMethods);
+                    return Visit(((SelectNode)node).SourceNode, state);
 
                 case QueryNodeType.Single:
-                    StripSingle((SingleNode) node, state.AdditionalQueryMethods);
-                    return Visit(((SingleNode) node).SourceNode, state);
+                    StripSingle((SingleNode)node, state.AdditionalQueryMethods);
+                    return Visit(((SingleNode)node).SourceNode, state);
 
                 case QueryNodeType.Skip:
-                    StripSkip((SkipNode) node, state.AdditionalQueryMethods);
-                    return Visit(((SkipNode) node).SourceNode, state);
+                    StripSkip((SkipNode)node, state.AdditionalQueryMethods);
+                    return Visit(((SkipNode)node).SourceNode, state);
 
                 case QueryNodeType.StartsWith:
-                    return VisitStartsWith((StartsWithNode) node, state);
+                    return VisitStartsWith((StartsWithNode)node, state);
 
                 case QueryNodeType.Take:
-                    StripTake((TakeNode) node, state.AdditionalQueryMethods);
-                    return Visit(((TakeNode) node).SourceNode, state);
+                    StripTake((TakeNode)node, state.AdditionalQueryMethods);
+                    return Visit(((TakeNode)node).SourceNode, state);
 
                 case QueryNodeType.Where:
-                    return VisitWhere((WhereNode) node, state);
+                    return VisitWhere((WhereNode)node, state);
 
                 case QueryNodeType.Matches:
-                    return VisitMatches((MatchesNode) node, state);
+                    return VisitMatches((MatchesNode)node, state);
 
                 case QueryNodeType.Filter:
                     state.FilterQuery = state.FilterQuery != null
-                        ? state.FilterQuery && VisitFilter((FilterNode) node, state)
-                        : VisitFilter((FilterNode) node, state);
-                    return Visit(((FilterNode) node).SourceNode, state);
+                        ? state.FilterQuery && VisitFilter((FilterNode)node, state)
+                        : VisitFilter((FilterNode)node, state);
+                    return Visit(((FilterNode)node).SourceNode, state);
 
                 case QueryNodeType.GetResults:
-                    StripGetResults((GetResultsNode) node, state.AdditionalQueryMethods);
-                    return Visit(((GetResultsNode) node).SourceNode, state);
+                    StripGetResults((GetResultsNode)node, state.AdditionalQueryMethods);
+                    return Visit(((GetResultsNode)node).SourceNode, state);
 
                 case QueryNodeType.GetFacets:
-                    StripGetFacets((GetFacetsNode) node, state.AdditionalQueryMethods);
-                    return Visit(((GetFacetsNode) node).SourceNode, state);
+                    StripGetFacets((GetFacetsNode)node, state.AdditionalQueryMethods);
+                    return Visit(((GetFacetsNode)node).SourceNode, state);
 
                 case QueryNodeType.FacetOn:
-                    StripFacetOn((FacetOnNode) node, state);
-                    return Visit(((FacetOnNode) node).SourceNode, state);
+                    StripFacetOn((FacetOnNode)node, state);
+                    return Visit(((FacetOnNode)node).SourceNode, state);
 
                 case QueryNodeType.FacetPivotOn:
-                    StripFacetPivotOn((FacetPivotOnNode) node, state);
-                    return Visit(((FacetPivotOnNode) node).SourceNode, state);
+                    StripFacetPivotOn((FacetPivotOnNode)node, state);
+                    return Visit(((FacetPivotOnNode)node).SourceNode, state);
 
                 case QueryNodeType.WildcardMatch:
-                    return VisitWildcardMatch((WildcardMatchNode) node, state);
+                    return VisitWildcardMatch((WildcardMatchNode)node, state);
 
                 case QueryNodeType.Like:
-                    return VisitLike((LikeNode) node, state);
+                    return VisitLike((LikeNode)node, state);
 
                 case QueryNodeType.Join:
                     // TODO: Not sure if this is correct, copied from Solr
-                    StripJoin((JoinNode) node, state);
+                    StripJoin((JoinNode)node, state);
                     return null;
 
                 case QueryNodeType.GroupJoin:
                     // TODO: Not sure if this is correct, copied from Solr
-                    StripGroupJoin((GroupJoinNode) node, state);
+                    StripGroupJoin((GroupJoinNode)node, state);
                     return null;
 
                 case QueryNodeType.SelfJoin:
-                    return VisitSelfJoin((SelfJoinNode) node, state);
+                    return VisitSelfJoin((SelfJoinNode)node, state);
 
                 case QueryNodeType.SelectMany:
                     // TODO: Not sure if this is correct, copied from Solr
-                    StripSelectMany((SelectManyNode) node, state);
+                    StripSelectMany((SelectManyNode)node, state);
                     return null;
 
                 case QueryNodeType.InContext:
                     List<IExecutionContext> executionContexts = state.ExecutionContexts.ToList();
-                    StripInContext((InContextNode) node, executionContexts);
+                    StripInContext((InContextNode)node, executionContexts);
                     state.ExecutionContexts = executionContexts;
-                    return Visit(((InContextNode) node).SourceNode, state);
+                    return Visit(((InContextNode)node).SourceNode, state);
 
                 case QueryNodeType.Union:
-                    StripUnion((UnionNode) node, state);
-                    return VisitUnion((UnionNode) node, state);
+                    StripUnion((UnionNode)node, state);
+                    return VisitUnion((UnionNode)node, state);
 
                 // TODO: What about these? They don't appear to be implemented by Solr or Lucene
                 //case QueryNodeType.Boost:
@@ -472,7 +472,7 @@ namespace ElasticSearch.ContentSearch.Linq
                 throw new NotSupportedException($"The query node type '{node.NodeType}' is not supported in this context.");
 
             var fieldName = FormatFieldName(node.FieldKey);
-            return new TermQuery {Field = fieldName, Value = true};
+            return new TermQuery { Field = fieldName, Value = true };
         }
 
         // TODO: ProcessAsVirtualField? Both Solr and Lucene do this
@@ -651,7 +651,11 @@ namespace ElasticSearch.ContentSearch.Linq
 
         protected QueryBase VisitUnion(UnionNode node, ElasticQueryMapperState state)
         {
-            throw new NotImplementedException();
+            var query1 = Visit(node.InnerQuery, state);
+            var query2 = Visit(node.OuterQuery, state);
+
+            // TODO: Need to check if this is correct, but it should be: https://www.elastic.co/guide/en/elasticsearch/guide/current/bool-query.html
+            return query1 || query2;
         }
 
         #endregion
